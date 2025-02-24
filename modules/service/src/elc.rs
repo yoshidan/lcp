@@ -80,7 +80,7 @@ where
 
             let any_header = chunk.header.ok_or(Status::invalid_argument("header value is required"))?;
 
-            match &complete.header {
+            match &mut complete.header {
                 None => {
                     complete.signer = chunk.signer;
                     complete.client_id = chunk.client_id;
