@@ -61,6 +61,7 @@ where
         .expect("failed to create gRPC reflection servicer");
     rt.block_on(async {
         Server::builder()
+            .max_frame_size(Some(1024 * 1024 * 1024)) // 1GB
             .add_service(elc_msg_srv)
             .add_service(elc_query_srv)
             .add_service(enclave_srv)
