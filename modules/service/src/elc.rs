@@ -87,7 +87,7 @@ where
                     complete.include_state = chunk.include_state;
                     complete.header = Some(any_header);
                 },
-                Some (mut header)=> {
+                Some (ref mut header)=> {
                    header.value.extend(any_header.value)
                 }
             }
