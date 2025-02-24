@@ -77,17 +77,15 @@ where
             header: None,
         };
         while let Some(chunk) = stream.message().await? {
-
-            let any_header = chunk.header.ok_or(Status::invalid_argument("header value is required"))?;
-
             match &mut complete.header {
                 None => {
                     complete.signer = chunk.signer;
                     complete.client_id = chunk.client_id;
                     complete.include_state = chunk.include_state;
-                    complete.header = Some(any_header);
+                    complete.header = chunk.header;
                 },
                 Some (ref mut header)=> {
+                    let any_header = chunk.header.ok_or(Status::invalid_argument("header value is required"))?;
                    header.value.extend(any_header.value)
                 }
             }
