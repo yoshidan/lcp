@@ -78,7 +78,7 @@ where
         };
         while let Some(chunk) = stream.message().await? {
 
-            let any_header = chunk.header.ok_or(Err(Status::invalid_argument("header value is required")))?;
+            let any_header = chunk.header.ok_or(Status::invalid_argument("header value is required"))?;
 
             match &complete.header {
                 None => {
