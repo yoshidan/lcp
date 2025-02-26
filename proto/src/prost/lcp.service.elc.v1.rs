@@ -518,6 +518,28 @@ pub mod msg_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        /// StreamingUpdateClient defines a rpc handler method for MsgUpdateClient.
+        pub async fn streaming_update_client(
+            &mut self,
+            request: impl tonic::IntoStreamingRequest<Message = super::MsgUpdateClient>,
+        ) -> Result<tonic::Response<super::MsgUpdateClientResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/lcp.service.elc.v1.Msg/StreamingUpdateClient",
+            );
+            self.inner
+                .client_streaming(request.into_streaming_request(), path, codec)
+                .await
+        }
         /// AggregateMessages defines a rpc handler method for MsgAggregateMessages
         pub async fn aggregate_messages(
             &mut self,
@@ -603,6 +625,11 @@ pub mod msg_server {
         async fn update_client(
             &self,
             request: tonic::Request<super::MsgUpdateClient>,
+        ) -> Result<tonic::Response<super::MsgUpdateClientResponse>, tonic::Status>;
+        /// StreamingUpdateClient defines a rpc handler method for MsgUpdateClient.
+        async fn streaming_update_client(
+            &self,
+            request: tonic::Request<tonic::Streaming<super::MsgUpdateClient>>,
         ) -> Result<tonic::Response<super::MsgUpdateClientResponse>, tonic::Status>;
         /// AggregateMessages defines a rpc handler method for MsgAggregateMessages
         async fn aggregate_messages(
@@ -755,6 +782,48 @@ pub mod msg_server {
                                 send_compression_encodings,
                             );
                         let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/lcp.service.elc.v1.Msg/StreamingUpdateClient" => {
+                    #[allow(non_camel_case_types)]
+                    struct StreamingUpdateClientSvc<T: Msg>(pub Arc<T>);
+                    impl<
+                        T: Msg,
+                    > tonic::server::ClientStreamingService<super::MsgUpdateClient>
+                    for StreamingUpdateClientSvc<T> {
+                        type Response = super::MsgUpdateClientResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<
+                                tonic::Streaming<super::MsgUpdateClient>,
+                            >,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).streaming_update_client(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = StreamingUpdateClientSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.client_streaming(method, req).await;
                         Ok(res)
                     };
                     Box::pin(fut)
