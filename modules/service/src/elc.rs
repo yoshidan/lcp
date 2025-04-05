@@ -35,7 +35,10 @@ where
         }
     }
 
-    async fn streaming_update_client(&self, request: Request<Streaming<MsgUpdateClient>>) -> Result<Response<MsgUpdateClientResponse>, Status> {
+    async fn streaming_update_client(
+        &self,
+        request: Request<Streaming<MsgUpdateClient>>,
+    ) -> Result<Response<MsgUpdateClientResponse>, Status> {
         let mut complete = MsgUpdateClient {
             signer: vec![],
             client_id: "".to_string(),
@@ -46,7 +49,9 @@ where
         let mut stream = request.into_inner();
         while let Some(chunk) = stream.message().await? {
             if let Some(header) = &mut complete.header {
-                let any_header = chunk.header.ok_or(Status::invalid_argument("header value is required"))?;
+                let any_header = chunk
+                    .header
+                    .ok_or(Status::invalid_argument("header value is required"))?;
                 header.value.extend(any_header.value);
             } else {
                 complete = chunk;
@@ -58,7 +63,6 @@ where
             Err(e) => Err(Status::aborted(e.to_string())),
         }
     }
-
 
     async fn aggregate_messages(
         &self,
