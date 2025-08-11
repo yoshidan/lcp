@@ -4,6 +4,7 @@ use ocall_handler::host_environment::Environment;
 use once_cell::race::OnceBox;
 use sgx_types::sgx_status_t;
 use sgx_types::*;
+use std::ffi::CStr;
 use std::slice;
 
 /// Error indicating that `set_environment` was unable to set the provided Environment
@@ -129,4 +130,27 @@ fn validate_const_ptr(ptr: *const u8, ptr_len: usize) -> SgxResult<()> {
         return Err(sgx_status_t::SGX_ERROR_UNEXPECTED);
     }
     Ok(())
+}
+
+fn log_from_cstr<F>(msg: *const i8, log_fn: F)
+where
+    F: Fn(&str),
+{
+    if msg.is_null() {
+        warn!("Tried to print a null pointer");
+        return;
+    }
+    let c_str = unsafe { CStr::from_ptr(msg) };
+    let str_slice = c_str.to_str().unwrap_or("Invalid UTF-8 string");
+    log_fn(str_slice);
+}
+
+#[no_mangle]
+pub extern "C" fn ocall_info(msg: *const i8) {
+    log_from_cstr(msg, |s| info!("enclave: {}", s));
+}
+
+#[no_mangle]
+pub extern "C" fn ocall_debug(msg: *const i8) {
+    log_from_cstr(msg, |s| debug!("enclave: {}", s));
 }

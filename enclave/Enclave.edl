@@ -20,4 +20,10 @@ enclave
             [out] uint32_t *out_buf_len
         );
     };
+    untrusted {
+        void ocall_info([in, string] const char* msg);
+    };
+    untrusted {
+        void ocall_debug([in, string] const char* msg);
+    };
 };
