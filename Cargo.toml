@@ -22,6 +22,7 @@ members = [
     "modules/mock-lc",
     "modules/service",
     "modules/zkvm",
+    "modules/enclave-util",
     "proto",
     "tests/integration",
     "tools/nodes-runner",

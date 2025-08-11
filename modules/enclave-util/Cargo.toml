@@ -1,0 +1,7 @@
+[package]
+name = "enclave-util"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sgx_tstd = { rev = "v1.1.6", git = "https://github.com/apache/incubator-teaclave-sgx-sdk" }

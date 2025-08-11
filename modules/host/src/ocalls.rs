@@ -130,3 +130,19 @@ fn validate_const_ptr(ptr: *const u8, ptr_len: usize) -> SgxResult<()> {
     }
     Ok(())
 }
+
+
+#[no_mangle]
+pub extern "C" fn ocall_print(msg: *const i8) {
+    use std::ffi::CStr;
+
+    if msg.is_null() {
+        warn!("Tried to print a null pointer");
+        return;
+    }
+
+    let c_str = unsafe { CStr::from_ptr(msg) };
+    let str_slice = c_str.to_str().unwrap_or("Invalid UTF-8 string");
+
+    let _ = info!("from enclave: {}", str_slice);
+}
