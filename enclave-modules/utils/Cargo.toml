@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sgx-types = { rev = "1f3134a469346ecae98cd4f67a7c11f28648ff41", git = "https://github.com/datachainlab/sgx-sdk-rs" }
-sgx-trts = { rev = "1f3134a469346ecae98cd4f67a7c11f28648ff41", git = "https://github.com/datachainlab/sgx-sdk-rs" }
+sgx-types = { rev = "2a7f4c76eda41147854570d0220b86aeac5c1e2b", git = "https://github.com/datachainlab/sgx-sdk-rs" }
+sgx-trts = { rev = "2a7f4c76eda41147854570d0220b86aeac5c1e2b", git = "https://github.com/datachainlab/sgx-sdk-rs" }
 log = { version = "0.4.8", default-features = false }
