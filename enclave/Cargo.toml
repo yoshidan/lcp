@@ -18,6 +18,9 @@ panic-logging = [
 enclave-runtime = { path = "../enclave-modules/runtime" }
 tendermint-lc = { path = "../modules/tendermint-lc", default-features = false }
 
+[build-dependencies]
+sgx-build = { rev = "2a7f4c76eda41147854570d0220b86aeac5c1e2b", git = "https://github.com/datachainlab/sgx-sdk-rs" }
+
 [patch."crates-io"]
 # TODO these patches would be better as optional
 sha2-0106 = { git = "https://github.com/bluele/hashes", branch = "0.10.8-sha256-hwa-disabled", package = "sha2" }
